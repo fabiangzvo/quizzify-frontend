@@ -24,10 +24,6 @@ async function rejectResponse(error: AxiosError): Promise<AxiosError> {
 function onRequestConfig(
   config: InternalAxiosRequestConfig
 ): InternalAxiosRequestConfig {
-  config.headers.Authorization = `Bearer ${localStorage.getItem(
-    "spotify-token"
-  )}`;
-
   return config;
 }
 

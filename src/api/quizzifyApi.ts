@@ -4,7 +4,7 @@ import {
   getResponse,
   onRequestConfig,
   rejectResponse,
-} from "../shared/AxiosConfig";
+} from "../shared/axiosConfig";
 
 const QuizzifyAxios = axios.create({
   baseURL: process.env.NEXT_PUBLIC_QUIZZIFY_URL,
