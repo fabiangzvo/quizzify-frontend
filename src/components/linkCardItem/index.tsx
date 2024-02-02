@@ -3,7 +3,7 @@ import Link from "next/link";
 import { TestBasicInfo } from "@/types/Test";
 
 function LinkCardItem(props: TestBasicInfo) {
-  const { id, title, description, total } = props;
+  const { id, title, description, total, topic } = props;
   return (
     <li
       key={id}
@@ -14,11 +14,16 @@ function LinkCardItem(props: TestBasicInfo) {
         className="flex items-center space-x-4 rtl:space-x-reverse"
       >
         <div className="flex-1 min-w-0 flex-shrink-0">
-          <h1 className="text-lg font-bold">{title}</h1>
-          <p className="text-md truncate">{description}</p>
+          <h1 className="text-xl font-bold">
+            {title}&ensp;
+            <span className="bg-[#F05D5E] text-lg font-medium me-2 px-2.5 py-0.5 rounded">
+              {topic}
+            </span>
+          </h1>
+          <p className="text-lg mt-5 text-gray-400 mr-10">{description}</p>
         </div>
-        <div className="inline-flex items-center text-md">
-          Total questions:&ensp;{total}
+        <div className="inline-flex items-center text-lg font-semibold">
+          Questions:&ensp;{total}
         </div>
       </Link>
     </li>

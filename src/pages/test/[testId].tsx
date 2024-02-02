@@ -1,8 +1,46 @@
-import { useRouter } from "next/router";
+import { useState, useMemo } from "react";
+import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
-function TestPage() {
-  const router = useRouter();
-  return <div>{router.query.testId}</div>;
+import { TestUnpopulated } from "@/types/Test";
+import { getTestById } from "@api/test";
+import Quiz from "@components/quiz";
+import QuizDescription from "@components/quizDescription";
+
+export const getServerSideProps = (async ({ query }) => {
+  const testId = query?.testId as string;
+
+  const testInfo = await getTestById({ testId });
+
+  return { props: { ...testInfo } };
+}) satisfies GetServerSideProps<TestUnpopulated>;
+
+function TestPage(
+  props: InferGetServerSidePropsType<typeof getServerSideProps>
+): JSX.Element {
+  const { description, questions, title, createdAt, _id } = props;
+
+  const [confirmPlay, setConfirmPlay] = useState(false);
+
+  const component = useMemo(() => {
+    if (confirmPlay) return <Quiz testId={_id} items={questions} />;
+
+    return (
+      <QuizDescription
+        _id={_id}
+        createdAt={createdAt}
+        description={description}
+        questions={questions}
+        title={title}
+        onConfirm={setConfirmPlay}
+      />
+    );
+  }, [_id, confirmPlay, createdAt, description, questions, title]);
+
+  return (
+    <main className={"flex min-h-screen items-center justify-center p-24 "}>
+      {component}
+    </main>
+  );
 }
 
 export default TestPage;
