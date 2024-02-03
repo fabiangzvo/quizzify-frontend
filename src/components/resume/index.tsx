@@ -18,6 +18,10 @@ function ResumeComponent(props: CompleteResume) {
         value: correctAnswers,
       },
       {
+        label: "Incorrect answers",
+        value: test.questions.length - correctAnswers,
+      },
+      {
         label: "Time",
         value: <>{(time / 60).toFixed(2)} Min</>,
       },
@@ -26,11 +30,11 @@ function ResumeComponent(props: CompleteResume) {
         value: rating.toFixed(2),
       },
       {
-        label: "Presented",
+        label: "Presented at",
         value: moment(presentedAt).format("MM DD YYYY - HH:MM A"),
       },
     ],
-    [correctAnswers, presentedAt, rating, time]
+    [correctAnswers, presentedAt, rating, test.questions.length, time]
   );
 
   const handleClick = useCallback<MouseEventHandler<HTMLButtonElement>>(
