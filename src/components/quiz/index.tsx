@@ -86,7 +86,7 @@ function Quiz(props: QuizProps) {
   }, [currentQuestion, isFinished, items, onSelectOption, resume]);
 
   return (
-    <div className="w-2/4 h-[80vh] flex flex-col justify-evenly items-center p-10 border border-gray-600 rounded-xl shadow-gray-900">
+    <div className="w-2/4 max-md:w-[95vw] overflow-y-auto h-[80vh] flex flex-col justify-evenly items-center p-10 border border-gray-600 rounded-xl shadow-gray-900">
       {component}
     </div>
   );
