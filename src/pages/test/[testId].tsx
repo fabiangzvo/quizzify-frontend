@@ -5,6 +5,7 @@ import { TestUnpopulated } from "@/types/Test";
 import { getTestById } from "@api/test";
 import Quiz from "@components/quiz";
 import QuizDescription from "@components/quizDescription";
+import Layout from "@components/layout";
 
 export const getServerSideProps = (async ({ query }) => {
   const testId = query?.testId as string;
@@ -36,11 +37,7 @@ function TestPage(
     );
   }, [_id, confirmPlay, createdAt, description, questions, title]);
 
-  return (
-    <main className={"flex min-h-screen items-center justify-center p-24 "}>
-      {component}
-    </main>
-  );
+  return <Layout>{component}</Layout>;
 }
 
 export default TestPage;
