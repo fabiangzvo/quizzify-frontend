@@ -22,7 +22,7 @@ function QuizDescription(props: QuizDescriptionProps) {
   );
 
   return (
-    <div className="w-2/4 max-md:w-[90vw] h-[80vh] flex flex-col justify-center items-center p-10 border border-gray-600 rounded-xl shadow-gray-900">
+    <div className="h-full flex flex-col justify-center items-center">
       <h1 className="text-xl font-bold text-center">
         Welcome to <br />
         {title}

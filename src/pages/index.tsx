@@ -20,10 +20,8 @@ export default function Home() {
 
   return (
     <Layout>
-      <div className="w-[50vw] max-md:w-[90vw] h-[80vh] flex flex-col  items-center p-10 border border-gray-600 rounded-xl shadow-gray-900">
-        <h1 className="text-xl font-bold mx-5 mb-10">Quizzes</h1>
-        <Loader isLoading={loading} component={<ListOfTests tests={tests} />} />
-      </div>
+      <h1 className="text-xl font-bold mx-5 mb-10">Quizzes</h1>
+      <Loader isLoading={loading} component={<ListOfTests tests={tests} />} />
     </Layout>
   );
 }
