@@ -11,4 +11,6 @@ function LoaderComponent(props: LoaderProps): JSX.Element {
   return isLoading ? <Loader /> : <>{component}</>;
 }
 
+export { Loader };
+
 export default LoaderComponent;

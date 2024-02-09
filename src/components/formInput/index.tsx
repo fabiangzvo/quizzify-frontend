@@ -29,7 +29,7 @@ function FormInput(props: FormInputProps) {
   const error = _get(errors, `${name}.message`, "") as string;
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       <span className="text-lg">{label}:</span>
       <input
         type={type}

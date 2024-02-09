@@ -7,9 +7,12 @@ import Layout from "@components/layout";
 import FormInput from "@components/formInput";
 import { UserSignIn } from "@/types/User";
 import { postSignIn } from "@api/user";
+import Brain from "@components/icons/lightBrain";
+import SubmitButton from "@components/submitButton";
 
 function SignIn() {
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
   const { handleSubmit, control } = useForm<UserSignIn>({
@@ -17,6 +20,7 @@ function SignIn() {
   });
 
   const onSubmit: SubmitHandler<UserSignIn> = async (data) => {
+    setIsLoading(true);
     const response = await postSignIn(data);
 
     switch (response?.status) {
@@ -31,16 +35,21 @@ function SignIn() {
       default:
         setError("Error");
     }
+    setIsLoading(false);
   };
 
   return (
     <Layout>
       <form
-        className="flex flex-col h-full w-3/5 justify-around"
+        className="flex flex-col h-full w-3/5 justify-around items-center"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <h1 className="text-xl font-bold text-center">Sign in</h1>
-        <div>
+        <div className="flex flex-col items-center">
+          <Brain width={100} height={100} />
+          <h1 className="text-xl font-bold">Quizzify</h1>
+        </div>
+        <div className="w-3/4 flex flex-col justify-center items-center">
+          <span className="text-2xl font-bold mb-10">Sign in</span>
           <FormInput
             type="text"
             control={control}
@@ -62,14 +71,7 @@ function SignIn() {
               </span>
             )}
           </div>
-          <div className="w-full flex justify-center">
-            <button
-              type="submit"
-              className="py-2.5 px-10 me-2 mb-2 text-lg font-medium focus:outline-none rounded-full border border-gray-600 focus:z-10 hover:bg-gray-800"
-            >
-              Sign up
-            </button>
-          </div>
+          <SubmitButton label="Sign in" isLoading={isLoading} />
         </div>
 
         <span className="text-xl text-center pt-5 max-md:text-lg">
