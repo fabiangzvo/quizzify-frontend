@@ -15,7 +15,7 @@ function ResumeList(props: ResumeListProps) {
     [items]
   );
 
-  return <ul className="w-4/6">{list}</ul>;
+  return <ul className="w-4/6 max-lg:w-full">{list}</ul>;
 }
 
 export default ResumeList;

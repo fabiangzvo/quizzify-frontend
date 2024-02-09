@@ -22,7 +22,7 @@ function QuizDescription(props: QuizDescriptionProps) {
   );
 
   return (
-    <div className="h-full flex flex-col justify-center items-center">
+    <div className="h-full max-lg:h-[90vh] max-lg:p-5 flex flex-col justify-center items-center">
       <h1 className="text-xl font-bold text-center">
         Welcome to <br />
         {title}
@@ -33,18 +33,18 @@ function QuizDescription(props: QuizDescriptionProps) {
         <span>Questions:&ensp;{questions.length}</span>
         <span>Created :&ensp;{moment(createdAt).format("MMM DD YYYY")}</span>
       </div>
-      <div className="w-2/4 flex justify-around mt-16">
+      <div className="w-2/4 flex max-lg:w-full max-lg:flex-col justify-around mt-16">
         <button
           type="button"
           onClick={handleBack}
-          className="py-2.5 px-10 me-2 mb-2 text-lg font-medium focus:outline-none rounded-full border border-gray-600 focus:z-10 hover:bg-gray-800"
+          className="max-lg:w-full max-lg:mt-4 max-lg:order-2 py-2.5 px-10 me-2 mb-2 text-lg font-medium focus:outline-none rounded-full border border-gray-600 focus:z-10 hover:bg-gray-800"
         >
           Back
         </button>
         <button
           type="button"
           onClick={handleClick}
-          className="py-2.5 px-10 me-2 mb-2 text-lg font-medium focus:outline-none rounded-full border border-gray-600 focus:z-10 hover:bg-gray-800"
+          className="max-lg:w-full max-lg:order-1 py-2.5 px-10 me-2 mb-2 text-lg font-medium focus:outline-none rounded-full border border-gray-600 focus:z-10 hover:bg-gray-800"
         >
           Start
         </button>

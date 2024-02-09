@@ -38,8 +38,10 @@ function Question(props: QuestionProps) {
     <Loader
       isLoading={loading}
       component={
-        <div className="h-full w-full flex flex-col justify-center items-center">
-          <p className="text-xl font-bold">{question?.description}</p>
+        <div className="h-full max-lg:h-[90vh] w-full flex flex-col justify-center items-center  max-lg:px-10">
+          <p className="text-xl font-bold text-center">
+            {question?.description}
+          </p>
           <div className="w-full h-auto mt-10">
             <ul>
               {question?.options.map((option) => (

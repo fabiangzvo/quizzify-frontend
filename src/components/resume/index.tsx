@@ -43,8 +43,10 @@ function ResumeComponent(props: CompleteResume) {
   );
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-evenly">
-      <h1 className="text-xl font-bold">Resume of : &ensp;{test?.title}</h1>
+    <div className="w-full h-auto flex flex-col items-center justify-evenly max-lg:p-5">
+      <h1 className="text-xl font-bold text-center">
+        Resume of : &ensp;{test?.title}
+      </h1>
       <p className="text-lg my-10 text-center">{test.description}</p>
       <ResumeList items={items} />
       <button

@@ -47,9 +47,7 @@ function Quiz(props: QuizProps) {
 
           const time = moment().diff(startTime, "s");
           const correctAnswers = answers.filter((answer) => answer.isCorrect);
-          const rating = correctAnswers.length
-            ? correctAnswers.length / items.length
-            : 0;
+          const score = (correctAnswers.length / items.length) * 0.5 * 10;
 
           const [response] = await postResume({
             correctAnswers: correctAnswers.length,
@@ -57,7 +55,7 @@ function Quiz(props: QuizProps) {
             time,
             test: testId,
             presentedAt: startTime.toISOString(),
-            rating: Number(rating.toFixed(2)) || 0,
+            rating: Number(score.toFixed(2)) || 0,
           });
 
           setResume(response);
@@ -68,7 +66,7 @@ function Quiz(props: QuizProps) {
   );
 
   const component = useMemo(() => {
-    if (!isFinished || !resume)
+    if (!isFinished)
       return (
         <QuestionComponent
           questionId={items[currentQuestion]}
@@ -80,7 +78,7 @@ function Quiz(props: QuizProps) {
     return (
       <Loader
         isLoading={isFinished && !resume}
-        component={<ResumeComponent {...resume} />}
+        component={resume && <ResumeComponent {...resume} />}
       />
     );
   }, [currentQuestion, isFinished, items, onSelectOption, resume]);

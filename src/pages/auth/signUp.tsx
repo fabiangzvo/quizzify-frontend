@@ -41,7 +41,7 @@ function SignUp() {
   return (
     <Layout>
       <form
-        className="flex flex-col h-full w-3/5 justify-around items-center"
+        className="flex flex-col h-full w-3/5 max-lg:w-full justify-around items-center"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="flex flex-col items-center">
@@ -91,7 +91,7 @@ function SignUp() {
               </span>
             )}
           </div>
-          <SubmitButton label="Sign in" isLoading={isLoading} />
+          <SubmitButton label="Sign up" isLoading={isLoading} />
         </div>
         <span className="text-xl text-center pt-5 max-md:text-lg">
           Already have an account?&nbsp;

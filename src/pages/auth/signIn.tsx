@@ -41,7 +41,7 @@ function SignIn() {
   return (
     <Layout>
       <form
-        className="flex flex-col h-full w-3/5 justify-around items-center"
+        className="flex flex-col h-full w-3/5 max-lg:w-full justify-around items-center"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="flex flex-col items-center">

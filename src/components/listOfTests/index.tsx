@@ -15,7 +15,11 @@ function ListOfTests(props: ListOfTestsProps) {
     [tests]
   );
 
-  return <ul className="h-auto max-md:overflow-y-auto">{testComponents}</ul>;
+  return (
+    <ul className="h-auto max-lg:h-[80vh] max-lg:overflow-y-auto">
+      {testComponents}
+    </ul>
+  );
 }
 
 export default ListOfTests;
