@@ -8,7 +8,7 @@ import {
 import { useRouter } from "next/router";
 
 import { AuthContext } from "@context/AuthContext";
-import Head from "@components/head";
+//import Head from "@components/head";
 
 function Layout(props: PropsWithChildren) {
   const { children } = props;
@@ -43,7 +43,6 @@ function Layout(props: PropsWithChildren) {
         )}
       </div>
       <main className="flex flex-col min-h-full items-center justify-around p-10 max-lg:justify-start max-lg:p-0">
-        <Head />
         <div className="w-[50vw] max-lg:w-screen max-lg:border-none max-lg:p-2 h-[80vh] flex flex-col items-center p-10 border border-gray-600 rounded-xl shadow-gray-900">
           {children}
         </div>
