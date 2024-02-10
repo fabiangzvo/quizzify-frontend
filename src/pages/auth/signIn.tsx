@@ -66,9 +66,7 @@ function SignIn() {
           />
           <div className="-mt-2 mb-8 h-4">
             {error && (
-              <span className="text-red-500 font-semibold text-xl">
-                {error}
-              </span>
+              <span className="text-accent font-semibold text-xl">{error}</span>
             )}
           </div>
           <SubmitButton label="Sign in" isLoading={isLoading} />
@@ -77,7 +75,7 @@ function SignIn() {
         <span className="text-xl text-center pt-5 max-md:text-lg">
           Don&apos;t have an account?&nbsp;
           <Link
-            className="text-2xl max-md:text-xl text-paragraph font-extrabold hover:underline"
+            className="text-2xl max-md:text-xl text-accent font-extrabold hover:underline"
             href="/auth/signUp"
           >
             Sign up

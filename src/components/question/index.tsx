@@ -38,7 +38,7 @@ function Question(props: QuestionProps) {
     <Loader
       isLoading={loading}
       component={
-        <div className="h-full max-lg:h-[90vh] w-full flex flex-col justify-center items-center  max-lg:px-10">
+        <div className="h-full max-lg:h-[90vh] w-full flex flex-col justify-center items-center max-lg:px-10">
           <p className="text-xl font-bold text-center">
             {question?.description}
           </p>
@@ -49,7 +49,7 @@ function Question(props: QuestionProps) {
                   <button
                     value={option._id}
                     onClick={handleClick}
-                    className="text-lg w-full border border-gray-600 hover:shadow-lg hover:shadow-gray-900 rounded-xl py-5 px-5 cursor-pointer"
+                    className="text-white text-lg w-full border border-primary bg-primary hover:shadow-lg hover:shadow-secondary rounded-xl py-5 px-5 cursor-pointer"
                   >
                     {option.description}
                   </button>

@@ -1,7 +1,9 @@
 import { useCallback, MouseEventHandler } from "react";
-import { TestUnpopulated } from "@/types/Test";
 import { useRouter } from "next/router";
 import moment from "moment";
+
+import { TestUnpopulated } from "@/types/Test";
+import Button from "@components/button";
 
 interface QuizDescriptionProps extends Omit<TestUnpopulated, "topic"> {
   onConfirm: (value: boolean) => void;
@@ -34,20 +36,16 @@ function QuizDescription(props: QuizDescriptionProps) {
         <span>Created :&ensp;{moment(createdAt).format("MMM DD YYYY")}</span>
       </div>
       <div className="w-2/4 flex max-lg:w-full max-lg:flex-col justify-around mt-16">
-        <button
-          type="button"
-          onClick={handleBack}
-          className="max-lg:w-full max-lg:mt-4 max-lg:order-2 py-2.5 px-10 me-2 mb-2 text-lg font-medium focus:outline-none rounded-full border border-gray-600 focus:z-10 hover:bg-gray-800"
-        >
-          Back
-        </button>
-        <button
-          type="button"
-          onClick={handleClick}
-          className="max-lg:w-full max-lg:order-1 py-2.5 px-10 me-2 mb-2 text-lg font-medium focus:outline-none rounded-full border border-gray-600 focus:z-10 hover:bg-gray-800"
-        >
-          Start
-        </button>
+        <Button
+          handleClick={handleBack}
+          classes="max-lg:mt-4 max-lg:order-2"
+          label="Back"
+        />
+        <Button
+          handleClick={handleClick}
+          label="Start"
+          classes="max-lg:order-1"
+        />
       </div>
     </div>
   );

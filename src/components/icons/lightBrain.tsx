@@ -4,7 +4,7 @@ function LightBrain(props: SvgProps) {
   const {
     height = "1280.000000pt",
     width = "1234.000000pt",
-    className = "fill-black dark:fill-white",
+    className = "fill-text",
   } = props;
 
   return (

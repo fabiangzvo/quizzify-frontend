@@ -39,9 +39,9 @@ function SignUp() {
   };
 
   return (
-    <Layout>
+    <Layout heightClass="min-h-[80vh]">
       <form
-        className="flex flex-col h-full w-3/5 max-lg:w-full justify-around items-center"
+        className="flex flex-col w-3/5 max-lg:w-full justify-around items-center m-8"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="flex flex-col items-center">
@@ -86,9 +86,7 @@ function SignUp() {
           />
           <div className="-mt-2 mb-8 h-4">
             {error && (
-              <span className="text-red-500 font-semibold text-xl">
-                {error}
-              </span>
+              <span className="text-accent font-semibold text-xl">{error}</span>
             )}
           </div>
           <SubmitButton label="Sign up" isLoading={isLoading} />
@@ -96,7 +94,7 @@ function SignUp() {
         <span className="text-xl text-center pt-5 max-md:text-lg">
           Already have an account?&nbsp;
           <Link
-            className="text-2xl max-md:text-xl text-paragraph font-extrabold hover:underline"
+            className="text-2xl max-md:text-xl text-accent font-extrabold hover:underline"
             href="/auth/signIn"
           >
             Sign in

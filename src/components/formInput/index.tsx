@@ -30,14 +30,14 @@ function FormInput(props: FormInputProps) {
 
   return (
     <div className="flex flex-col w-full">
-      <span className="text-lg">{label}:</span>
+      <span className="text-lg font-bold">{label}:</span>
       <input
         type={type}
-        className="bg-black border border-gray-600 rounded-md px-2 h-9 text-lg focus-visible:border focus-visible:border-blue-700"
+        className="bg-background border border-paragraph rounded-md px-2 h-9 text-lg"
         {...field}
       />
       <div className="mt-1 mb-3 h-4">
-        {error && <span className="text-red-500 font-semibold">{error}</span>}
+        {error && <span className="text-accent font-semibold">{error}</span>}
       </div>
     </div>
   );

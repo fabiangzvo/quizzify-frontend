@@ -7,7 +7,7 @@ function LinkCardItem(props: TestBasicInfo) {
   return (
     <li
       key={id}
-      className="border border-gray-600 hover:shadow-lg hover:shadow-gray-900 rounded-lg p-10 m-5 cursor-pointer max-lg:p-4"
+      className="border border-paragraph hover:shadow-lg hover:shadow-paragraph rounded-lg p-10 m-5 cursor-pointer max-lg:p-4"
     >
       <Link
         href={`/test/${id}`}
@@ -16,11 +16,11 @@ function LinkCardItem(props: TestBasicInfo) {
         <div className="flex-1 min-w-0 flex-shrink-0 max-lg:justify-center max-lg:text-center">
           <h1 className="text-xl font-bold max-lg:w-full ">
             {title}&ensp;
-            <span className="bg-[#F05D5E] text-lg font-medium me-2 px-2.5 py-0.5 rounded">
+            <span className="bg-primary text-white text-lg font-medium me-2 px-2.5 py-0.5 rounded">
               {topic}
             </span>
           </h1>
-          <p className="text-lg mt-5 text-gray-400 mr-10 max-lg:w-full">
+          <p className="text-lg mt-5 text-paragraph mr-10 max-lg:w-full">
             {description}
           </p>
         </div>

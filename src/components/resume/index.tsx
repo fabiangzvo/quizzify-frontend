@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 import moment from "moment";
 
 import { CompleteResume } from "@/types/Resume";
+import Button from "@components/button";
+
 import { ListItemProps } from "./types";
 import ResumeList from "./components/resumeList";
 
@@ -47,15 +49,11 @@ function ResumeComponent(props: CompleteResume) {
       <h1 className="text-xl font-bold text-center">
         Resume of : &ensp;{test?.title}
       </h1>
-      <p className="text-lg my-10 text-center">{test.description}</p>
+      <p className="text-lg my-10 text-center text-paragraph">
+        {test.description}
+      </p>
       <ResumeList items={items} />
-      <button
-        onClick={handleClick}
-        type="button"
-        className="mt-10 py-2.5 px-10 text-lg font-medium focus:outline-none rounded-full border border-gray-600 focus:z-10 hover:bg-gray-800"
-      >
-        Finish
-      </button>
+      <Button classes="mt-10" handleClick={handleClick} label="Finish" />
     </div>
   );
 }

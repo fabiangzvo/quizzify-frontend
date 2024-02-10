@@ -6,12 +6,18 @@ import {
   MouseEventHandler,
 } from "react";
 import { useRouter } from "next/router";
+import cs from "classnames";
 
 import { AuthContext } from "@context/AuthContext";
+import ThemeButton from "@components/themeButton";
 //import Head from "@components/head";
 
-function Layout(props: PropsWithChildren) {
-  const { children } = props;
+interface LayoutProps extends PropsWithChildren {
+  heightClass?: string;
+}
+
+function Layout(props: LayoutProps) {
+  const { children, heightClass = "h-[80vh]" } = props;
 
   const router = useRouter();
   const { setAuthenticated, isAuthenticated, logout } = useContext(AuthContext);
@@ -35,15 +41,25 @@ function Layout(props: PropsWithChildren) {
 
   return (
     <>
-      <div className="w-full flex justify-end max-lg:p-5">
+      <div className="w-full flex justify-end p-5">
+        <ThemeButton />
         {isAuthenticated && (
-          <button className="font-semibold text-xl" onClick={handleLogout}>
+          <button
+            className="ml-10 font-semibold text-xl"
+            onClick={handleLogout}
+          >
             Logout
           </button>
         )}
       </div>
       <main className="flex flex-col min-h-full items-center justify-around p-10 max-lg:justify-start max-lg:p-0">
-        <div className="w-[50vw] max-lg:w-screen max-lg:border-none max-lg:p-2 h-[80vh] flex flex-col items-center p-10 border border-gray-600 rounded-xl shadow-gray-900">
+        <div
+          className={cs({
+            "w-[50vw] max-lg:w-screen max-lg:border-none max-lg:p-2 flex flex-col items-center p-10 border lg:border-paragraph rounded-xl lg:shadow-paragraph lg:shadow-lg":
+              true,
+            [heightClass]: !!heightClass,
+          })}
+        >
           {children}
         </div>
       </main>
