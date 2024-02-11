@@ -4,6 +4,7 @@ export interface Answer {
   questionId: string;
   optionId: string;
   isCorrect: boolean;
+  _id?: string;
 }
 
 export interface CompleteResume {
@@ -16,11 +17,14 @@ export interface CompleteResume {
 }
 
 export interface Resume {
+  _id?: string;
   time: number;
   correctAnswers: number;
   rating: number;
-  test: string;
+  test: string | Test;
   presentedAt: string;
   answers: Array<Answer>;
   user: string;
+  createdAt?: string;
+  updatedAt?: string;
 }

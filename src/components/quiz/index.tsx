@@ -35,26 +35,30 @@ function Quiz(props: QuizProps) {
       const selectedOption = options.find((option) => option._id === value);
 
       if (selectedOption) {
-        setAnswers([
-          ...answers,
-          {
-            optionId: selectedOption._id,
-            questionId: question._id,
-            isCorrect: selectedOption.isCorrect,
-          },
-        ]);
+        const lastAnswer = {
+          optionId: selectedOption._id,
+          questionId: question._id,
+          isCorrect: selectedOption.isCorrect,
+        };
+
+        const allAnswers = [...answers, lastAnswer];
+
+        setAnswers(allAnswers);
+
         if (items.length - 1 > currentQuestion) {
           setCurrentQuestion(currentQuestion + 1);
         } else {
           setIsFinished(true);
 
           const time = moment().diff(startTime, "s");
-          const correctAnswers = answers.filter((answer) => answer.isCorrect);
+          const correctAnswers = allAnswers.filter(
+            (answer) => answer.isCorrect
+          );
           const score = (correctAnswers.length / items.length) * 0.5 * 10;
 
           const [response] = await postResume({
             correctAnswers: correctAnswers.length,
-            answers,
+            answers: allAnswers,
             time,
             test: testId,
             user: user ? user._id : "",

@@ -14,10 +14,11 @@ import ThemeButton from "@components/themeButton";
 
 interface LayoutProps extends PropsWithChildren {
   heightClass?: string;
+  overrideClass?: string;
 }
 
 function Layout(props: LayoutProps) {
-  const { children, heightClass = "h-[80vh]" } = props;
+  const { children, heightClass = "h-[80vh]", overrideClass = "" } = props;
 
   const router = useRouter();
   const { refreshAuthContext, isAuthenticated, logout } =
@@ -57,8 +58,9 @@ function Layout(props: LayoutProps) {
         <div
           className={cs({
             "w-[50vw] max-lg:w-screen max-lg:border-none max-lg:p-2 flex flex-col items-center p-10 border lg:border-paragraph rounded-xl lg:shadow-paragraph lg:shadow-lg":
-              true,
+              !overrideClass,
             [heightClass]: !!heightClass,
+            [overrideClass]: !!overrideClass,
           })}
         >
           {children}
