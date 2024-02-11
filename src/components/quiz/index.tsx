@@ -1,4 +1,4 @@
-import { useState, useCallback, MouseEvent, useMemo } from "react";
+import { useState, useCallback, MouseEvent, useMemo, useContext } from "react";
 import moment from "moment";
 
 import QuestionComponent from "../question";
@@ -7,6 +7,7 @@ import { postResume } from "@api/resume";
 import { Question } from "@/types/Question";
 import { Answer, CompleteResume } from "@/types/Resume";
 import Loader from "@components/loader";
+import { UserContext } from "@context/UserContext";
 
 interface QuizProps {
   items: Array<string>;
@@ -21,6 +22,8 @@ function Quiz(props: QuizProps) {
   const [answers, setAnswers] = useState([] as Answer[]);
   const [resume, setResume] = useState<CompleteResume | null>(null);
   const [startTime, _] = useState(() => moment());
+
+  const { user } = useContext(UserContext);
 
   const onSelectOption = useCallback(
     async (question: Question, e: MouseEvent<HTMLButtonElement>) => {
@@ -54,6 +57,7 @@ function Quiz(props: QuizProps) {
             answers,
             time,
             test: testId,
+            user: user ? user._id : "",
             presentedAt: startTime.toISOString(),
             rating: Number(score.toFixed(2)) || 0,
           });
@@ -62,7 +66,7 @@ function Quiz(props: QuizProps) {
         }
       }
     },
-    [answers, currentQuestion, items.length, startTime, testId]
+    [answers, currentQuestion, items.length, startTime, testId, user]
   );
 
   const component = useMemo(() => {
@@ -83,7 +87,7 @@ function Quiz(props: QuizProps) {
     );
   }, [currentQuestion, isFinished, items, onSelectOption, resume]);
 
-  return component; 
+  return component;
 }
 
 export default Quiz;

@@ -24,6 +24,12 @@ async function rejectResponse(error: AxiosError): Promise<AxiosError> {
 function onRequestConfig(
   config: InternalAxiosRequestConfig
 ): InternalAxiosRequestConfig {
+  const token = localStorage.getItem("token");
+
+  if (!config.url?.match(/sign-ig|sign-up/g)) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
   return config;
 }
 

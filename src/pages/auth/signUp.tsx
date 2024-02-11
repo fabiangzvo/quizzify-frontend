@@ -10,12 +10,14 @@ import { postSignUp } from "@api/user";
 import { AuthContext } from "@context/AuthContext";
 import Brain from "@components/icons/lightBrain";
 import SubmitButton from "@components/submitButton";
+import { UserContext } from "@context/UserContext";
 
 function SignUp() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
+  const { setUser } = useContext(UserContext);
   const { refreshAuthContext } = useContext(AuthContext);
   const { handleSubmit, control } = useForm<UserSignUp>({
     mode: "onSubmit",
@@ -29,9 +31,12 @@ function SignUp() {
       const { accessToken } = response.data;
 
       localStorage.setItem("token", accessToken);
+
       setError("");
       refreshAuthContext();
       setIsLoading(false);
+      setUser(response.data);
+
       router.push("/");
     } else {
       setError("user has not been created");

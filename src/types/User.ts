@@ -11,8 +11,11 @@ export interface UserSignUp {
 export interface UserSigned {
   expirationTime: number;
   accessToken: string;
-  _id: String;
+  _id: string;
   fullName: string;
   userName: string;
   email: string;
+  createdAt: string;
 }
+
+export type UserProfile = Omit<UserSigned, "accessToken" | "expirationTime">;

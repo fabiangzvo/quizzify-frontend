@@ -22,4 +22,5 @@ export interface Resume {
   test: string;
   presentedAt: string;
   answers: Array<Answer>;
+  user: string;
 }

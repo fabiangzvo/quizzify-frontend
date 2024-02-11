@@ -20,16 +20,17 @@ function Layout(props: LayoutProps) {
   const { children, heightClass = "h-[80vh]" } = props;
 
   const router = useRouter();
-  const { setAuthenticated, isAuthenticated, logout } = useContext(AuthContext);
+  const { refreshAuthContext, isAuthenticated, logout } =
+    useContext(AuthContext);
 
   useEffect(() => {
+    refreshAuthContext();
     const isAuthenticated = !!window.localStorage.getItem("token");
-    setAuthenticated(isAuthenticated);
 
     if (!isAuthenticated && !router.asPath.match(/signIn|signUp/g)) {
       router.push("/auth/signIn");
     }
-  }, [router, setAuthenticated]);
+  }, [router, refreshAuthContext]);
 
   const handleLogout = useCallback<MouseEventHandler<HTMLButtonElement>>(
     (e) => {

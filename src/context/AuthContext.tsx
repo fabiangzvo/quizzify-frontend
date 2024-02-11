@@ -1,5 +1,6 @@
 "use client";
 import { useState, createContext, useCallback, useEffect } from "react";
+import { useRouter } from "next/router";
 
 import { AuthInterface } from "@/types/Auth";
 import { ProviderProps } from "@/types/Context";
@@ -15,6 +16,7 @@ function AuthProvider(props: ProviderProps) {
   const { children } = props;
 
   const [isAuthenticated, setAuthenticated] = useState<boolean>(false);
+  const router = useRouter();
 
   useEffect(() => {
     setAuthenticated(!!window.localStorage.getItem("token"));
@@ -29,8 +31,9 @@ function AuthProvider(props: ProviderProps) {
     localStorage.removeItem("token");
 
     refreshAuthContext();
-    window.location.reload();
-  }, [refreshAuthContext]);
+
+    router.replace("/auth/signIn");
+  }, [refreshAuthContext, router]);
 
   return (
     <AuthContext.Provider

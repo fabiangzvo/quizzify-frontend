@@ -25,11 +25,7 @@ function QuizDescription(props: QuizDescriptionProps) {
 
   return (
     <div className="h-full max-lg:h-[90vh] max-lg:p-5 flex flex-col justify-center items-center">
-      <h1 className="text-xl font-bold text-center">
-        Welcome to <br />
-        {title}
-      </h1>
-
+      <h1 className="text-xl font-bold text-center">{title}</h1>
       <p className="text-lg my-10 text-center text-gray-400">{description}</p>
       <div className="w-full flex justify-around text-lg my-5 font-semibold">
         <span>Questions:&ensp;{questions.length}</span>

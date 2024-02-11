@@ -1,41 +1,59 @@
-import { useState, useMemo } from "react";
-import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { useState, useMemo, useEffect } from "react";
+import { useRouter } from "next/router";
 
 import { TestUnpopulated } from "@/types/Test";
 import { getTestById } from "@api/test";
 import Quiz from "@components/quiz";
 import QuizDescription from "@components/quizDescription";
 import Layout from "@components/layout";
+import Loader from "@components/loader";
 
-export const getServerSideProps = (async ({ query }) => {
-  const testId = query?.testId as string;
-
-  const testInfo = await getTestById({ testId });
-
-  return { props: { ...testInfo } };
-}) satisfies GetServerSideProps<TestUnpopulated>;
-
-function TestPage(
-  props: InferGetServerSidePropsType<typeof getServerSideProps>
-): JSX.Element {
-  const { description, questions, title, createdAt, _id } = props;
-
+function TestPage(): JSX.Element {
   const [confirmPlay, setConfirmPlay] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [quiz, setQuiz] = useState<TestUnpopulated>();
+
+  const router = useRouter();
+
+  useEffect(() => {
+    async function getInitialData() {
+      setIsLoading(true);
+      const { testId = "" } = router.query;
+
+      if (!testId) return;
+
+      const testInfo = await getTestById({ testId: testId as string });
+
+      setQuiz(testInfo);
+      setIsLoading(false);
+    }
+
+    getInitialData();
+  }, [router]);
 
   const component = useMemo(() => {
+    if (!quiz) return;
+
+    const { description, questions, title, createdAt, _id } = quiz;
+
     if (confirmPlay) return <Quiz testId={_id} items={questions} />;
 
     return (
-      <QuizDescription
-        _id={_id}
-        createdAt={createdAt}
-        description={description}
-        questions={questions}
-        title={title}
-        onConfirm={setConfirmPlay}
+      <Loader
+        isLoading={isLoading}
+        component={
+          <QuizDescription
+            _id={_id}
+            createdAt={createdAt}
+            description={description}
+            questions={questions}
+            title={title}
+            onConfirm={setConfirmPlay}
+          />
+        }
       />
     );
-  }, [_id, confirmPlay, createdAt, description, questions, title]);
+  }, [confirmPlay, quiz, isLoading]);
 
   return <Layout>{component}</Layout>;
 }

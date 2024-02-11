@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useContext } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -9,11 +9,13 @@ import { UserSignIn } from "@/types/User";
 import { postSignIn } from "@api/user";
 import Brain from "@components/icons/lightBrain";
 import SubmitButton from "@components/submitButton";
+import { UserContext } from "@context/UserContext";
 
 function SignIn() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const { setUser } = useContext(UserContext);
   const router = useRouter();
   const { handleSubmit, control } = useForm<UserSignIn>({
     mode: "onSubmit",
@@ -27,14 +29,19 @@ function SignIn() {
       case 404:
         setError("User nor exist");
         break;
+
       case 200:
         setError("");
         localStorage.setItem("token", response.data.accessToken);
+        setUser(response.data);
+
         router.push("/");
         break;
+
       default:
         setError("Error");
     }
+
     setIsLoading(false);
   };
 
