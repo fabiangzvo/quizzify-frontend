@@ -1,29 +1,38 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTheme } from "next-themes";
+import { Button } from "@heroui/react";
 import { FaMoon, FaSun } from "react-icons/fa";
 
-import Button from "@components/button";
-
 function ThemeButton() {
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
-  const handleClick = useCallback<React.MouseEventHandler<HTMLElement>>(
-    () => setTheme(theme === "light" ? "dark" : "light"),
-    [theme, setTheme]
-  );
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  const component = useMemo(
-    () => (theme === "light" ? <FaSun /> : <FaMoon />),
-    [theme]
-  );
+  const isLight = mounted ? resolvedTheme === "light" : true;
+
+  const handleToggle = useCallback(() => {
+    setTheme(isLight ? "dark" : "light");
+  }, [isLight, setTheme]);
 
   return (
     <Button
-      classes="rounded-full flex justify-center items-center py-0 h-8 w-8 border-paragraph hover:text-white hover:border-primary"
-      handleClick={handleClick}
-      label={component}
-      overrideClass
-    />
+      isIconOnly
+      size="sm"
+      radius="full"
+      variant="bordered"
+      onPress={handleToggle}
+      aria-label={isLight ? "Cambiar a tema oscuro" : "Cambiar a tema claro"}
+      className="border-divider bg-content1 text-foreground hover:border-primary hover:text-primary"
+    >
+      {isLight ? (
+        <FaSun aria-hidden="true" />
+      ) : (
+        <FaMoon aria-hidden="true" />
+      )}
+    </Button>
   );
 }
 
