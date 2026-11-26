@@ -48,10 +48,6 @@ function SignIn() {
     control,
     rules: {
       required: "Ingresa tu contraseña.",
-      minLength: {
-        value: 8,
-        message: "La contraseña debe tener al menos 8 caracteres.",
-      },
     },
   });
 
