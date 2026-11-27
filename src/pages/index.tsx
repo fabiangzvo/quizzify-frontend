@@ -1,35 +1,12 @@
-import {
-  useState,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-} from "react";
+import { useState, useCallback, useContext, useEffect, useMemo } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import NextLink from "next/link";
-import {
-  Button,
-  Input,
-  Chip,
-  Tabs,
-  Tab,
-  Link,
-  Avatar,
-} from "@heroui/react";
-import {
-  LuHome,
-  LuFileText,
-  LuCompass,
-  LuBarChart3,
-  LuUsers,
-  LuSearch,
-  LuBell,
-  LuPlus,
-  LuLogOut,
-} from "react-icons/lu";
+import { Button, Input, Chip, Tabs, Tab, Link, Avatar } from "@heroui/react";
+import { LuSearch, LuBell, LuPlus, LuPlay } from "react-icons/lu";
 
 import Brain from "@components/icons/lightBrain";
+import Sidebar from "@components/sidebar";
 import ThemeButton from "@components/themeButton";
 import { TestBasicInfo } from "@/types/Test";
 import { Resume } from "@/types/Resume";
@@ -37,15 +14,6 @@ import { getAllTest } from "@api/test";
 import { getResumeByUserId } from "@api/resume";
 import { UserContext } from "@context/UserContext";
 import { AuthContext } from "@context/AuthContext";
-
-/* ─── Sidebar nav items ─── */
-const navItems = [
-  { label: "Inicio", icon: LuHome, href: "/", active: true },
-  { label: "Mis cuestionarios", icon: LuFileText, href: "#" },
-  { label: "Explorar", icon: LuCompass, href: "#" },
-  { label: "Resultados", icon: LuBarChart3, href: "#" },
-  { label: "Grupos", icon: LuUsers, href: "#" },
-];
 
 /* ─── Stat card ─── */
 function StatCard({
@@ -79,6 +47,7 @@ export default function Home() {
   const [resumes, setResumes] = useState<Resume[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [roomCode, setRoomCode] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState<string>("all");
 
   const router = useRouter();
@@ -134,9 +103,23 @@ export default function Home() {
       : 0;
 
   const filteredTests = useMemo(() => {
-    if (filter === "all") return tests;
-    return tests;
-  }, [tests, filter]);
+    const query = searchQuery.trim().toLowerCase();
+    return tests.filter((test) => {
+      if (!query) return true;
+      return (
+        test.title.toLowerCase().includes(query) ||
+        test.description.toLowerCase().includes(query) ||
+        test.topic?.toLowerCase().includes(query) ||
+        test.topics?.some((t) => {
+          const text =
+            typeof t === "string"
+              ? t
+              : (t.name ?? t.title ?? t.label ?? t.description ?? "");
+          return text.toLowerCase().includes(query);
+        })
+      );
+    });
+  }, [tests, searchQuery]);
 
   if (!isAuthenticated) return null;
 
@@ -149,51 +132,7 @@ export default function Home() {
       </Head>
 
       <div className="min-h-screen flex bg-background text-foreground">
-        {/* ════════════════════════ Sidebar ════════════════════════ */}
-        <aside className="hidden lg:flex flex-col w-56 shrink-0 border-r border-divider bg-content1 px-4 py-6">
-          {/* Logo */}
-          <Link
-            as={NextLink}
-            href="/"
-            className="flex items-center gap-2 px-2 mb-8">
-            <Brain width={26} height={26} className="fill-primary" />
-            <span className="text-xl font-bold tracking-tight text-foreground">
-              Quizzify
-            </span>
-          </Link>
-
-          {/* Nav links */}
-          <nav className="flex flex-col gap-1">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.label}
-                  as={NextLink}
-                  href={item.href}
-                  className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
-                    item.active
-                      ? "bg-primary text-white"
-                      : "text-default-600 hover:bg-content2 hover:text-foreground"
-                  }`}>
-                  <Icon size={18} />
-                  {item.label}
-                </Link>
-              );
-            })}
-          </nav>
-
-          {/* Spacer + logout */}
-          <div className="mt-auto pt-6">
-            <Button
-              variant="light"
-              startContent={<LuLogOut size={16} />}
-              onPress={logout}
-              className="w-full justify-start text-default-500 hover:text-danger">
-              Cerrar sesión
-            </Button>
-          </div>
-        </aside>
+        <Sidebar onLogout={logout} />
 
         {/* ════════════════════════ Main area ════════════════════════ */}
         <div className="flex-1 flex flex-col min-w-0">
@@ -206,27 +145,6 @@ export default function Home() {
                 Quizzify
               </span>
             </div>
-
-            {/* Search */}
-            <Input
-              startContent={
-                <LuSearch
-                  size={16}
-                  className="text-default-400"
-                  aria-hidden="true"
-                />
-              }
-              placeholder="Buscar cuestionarios, temas o personas"
-              variant="bordered"
-              radius="lg"
-              size="sm"
-              classNames={{
-                base: "max-w-md",
-                inputWrapper:
-                  "h-10 bg-content1 border-divider shadow-none data-[hover=true]:border-primary-300",
-                input: "text-sm",
-              }}
-            />
 
             <div className="flex-1" />
 
@@ -294,17 +212,13 @@ export default function Home() {
                 </div>
                 <div className="flex gap-2">
                   <Button
-                    variant="bordered"
-                    radius="full"
-                    className="border-primary text-primary font-semibold">
-                    Nuevo cuestionario
-                  </Button>
-                  <Button
+                    as={NextLink}
+                    href="/test/create"
                     color="primary"
                     radius="full"
                     startContent={<LuPlus size={16} />}
-                    className="font-semibold">
-                    Crear pregunta
+                    className="font-semibold text-white">
+                    Nuevo cuestionario
                   </Button>
                 </div>
               </div>
@@ -339,36 +253,61 @@ export default function Home() {
 
               {/* Quizzes table */}
               <div className="rounded-2xl border border-divider bg-content1 overflow-hidden">
-                <div className="flex flex-wrap items-center justify-between gap-3 px-5 pt-5 pb-3">
+                <div className="flex flex-col gap-3 px-5 pt-5 pb-3">
                   <h2 className="text-lg font-bold text-foreground">
                     Mis cuestionarios
                   </h2>
-                  <Tabs
-                    size="sm"
-                    variant="solid"
-                    radius="full"
-                    selectedKey={filter}
-                    onSelectionChange={(key) => setFilter(key as string)}
-                    classNames={{
-                      tabList: "bg-content2",
-                      cursor: "bg-background shadow-sm",
-                      tabContent:
-                        "text-sm font-medium group-data-[selected=true]:text-foreground text-default-500",
-                    }}>
-                    <Tab key="all" title="Todos" />
-                    <Tab key="active" title="Activos" />
-                    <Tab key="draft" title="Borradores" />
-                  </Tabs>
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <Input
+                      isClearable
+                      startContent={
+                        <LuSearch
+                          size={16}
+                          className="text-default-400"
+                          aria-hidden="true"
+                        />
+                      }
+                      placeholder="Buscar por nombre o tema..."
+                      variant="bordered"
+                      radius="lg"
+                      size="sm"
+                      value={searchQuery}
+                      onValueChange={setSearchQuery}
+                      onClear={() => setSearchQuery("")}
+                      classNames={{
+                        base: "w-full sm:w-72",
+                        inputWrapper:
+                          "h-9 bg-background border-divider shadow-none data-[hover=true]:border-primary-300",
+                        input: "text-sm",
+                      }}
+                    />
+                    <Tabs
+                      size="sm"
+                      variant="solid"
+                      radius="full"
+                      selectedKey={filter}
+                      onSelectionChange={(key) => setFilter(key as string)}
+                      classNames={{
+                        tabList: "bg-content2",
+                        cursor: "bg-background shadow-sm",
+                        tabContent:
+                          "text-sm font-medium group-data-[selected=true]:text-foreground text-default-500",
+                      }}>
+                      <Tab key="all" title="Todos" />
+                      <Tab key="active" title="Activos" />
+                      <Tab key="draft" title="Borradores" />
+                    </Tabs>
+                  </div>
                 </div>
 
                 {/* Table header */}
-                <div className="hidden sm:grid grid-cols-[2fr_1fr_1fr_1fr_1fr_auto] gap-2 px-5 py-2 text-xs font-medium text-default-400 uppercase tracking-wider border-b border-divider">
+                <div className="hidden sm:grid grid-cols-[2fr_1fr_1fr_1fr_1fr_150px] gap-2 px-5 py-2 text-xs font-medium text-default-400 uppercase tracking-wider border-b border-divider">
                   <span>Nombre</span>
                   <span className="text-center">Preguntas</span>
                   <span className="text-center">Respuestas</span>
                   <span className="text-center">Precisión</span>
                   <span className="text-center">Estado</span>
-                  <span />
+                  <span className="text-right">Acciones</span>
                 </div>
 
                 {/* Table rows */}
@@ -378,21 +317,29 @@ export default function Home() {
                   </div>
                 ) : filteredTests.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-16 text-default-400 text-sm gap-2">
-                    <p>No tienes cuestionarios aún.</p>
-                    <Button
-                      size="sm"
-                      color="primary"
-                      variant="flat"
-                      radius="full">
-                      Crear uno
-                    </Button>
+                    <p>
+                      {searchQuery.trim()
+                        ? `No se encontraron cuestionarios para "${searchQuery.trim()}".`
+                        : "No tienes cuestionarios aún."}
+                    </p>
+                    {!searchQuery.trim() && (
+                      <Button
+                        as={NextLink}
+                        href="/test/create"
+                        size="sm"
+                        color="primary"
+                        variant="flat"
+                        radius="full">
+                        Crear uno
+                      </Button>
+                    )}
                   </div>
                 ) : (
                   <ul>
                     {filteredTests.map((test) => (
                       <li
                         key={test.id}
-                        className="grid grid-cols-1 sm:grid-cols-[2fr_1fr_1fr_1fr_1fr_auto] gap-2 items-center px-5 py-3.5 border-b border-divider last:border-b-0 hover:bg-content2/50 transition-colors">
+                        className="grid grid-cols-1 sm:grid-cols-[2fr_1fr_1fr_1fr_1fr_150px] gap-2 items-center px-5 py-3.5 border-b border-divider last:border-b-0 hover:bg-content2/50 transition-colors">
                         <div className="min-w-0">
                           <p className="text-sm font-medium text-foreground truncate">
                             {test.title}
@@ -423,12 +370,24 @@ export default function Home() {
                             Publicado
                           </Chip>
                         </div>
-                        <Link
-                          as={NextLink}
-                          href={`/test/${test.id}`}
-                          className="text-sm font-medium text-primary hover:underline">
-                          Editar
-                        </Link>
+                        <div className="flex items-center justify-end gap-3">
+                          <Button
+                            as={NextLink}
+                            href={`/test/${test.id}`}
+                            size="sm"
+                            color="primary"
+                            radius="full"
+                            startContent={<LuPlay size={12} />}
+                            className="h-7 px-3 text-xs font-semibold text-white">
+                            Realizar
+                          </Button>
+                          <Link
+                            as={NextLink}
+                            href={`/test/edit/${test.id}`}
+                            className="text-sm font-medium text-primary hover:underline">
+                            Editar
+                          </Link>
+                        </div>
                       </li>
                     ))}
                   </ul>
@@ -441,9 +400,7 @@ export default function Home() {
               {/* Scheduled room card */}
               <div className="rounded-2xl bg-[linear-gradient(135deg,#1E1B2B_0%,#322E47_100%)] p-5 text-white">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs text-white/70">
-                    Sala programada
-                  </span>
+                  <span className="text-xs text-white/70">Sala programada</span>
                   <Chip
                     size="sm"
                     variant="flat"
@@ -458,9 +415,7 @@ export default function Home() {
                 <h3 className="text-base font-bold leading-snug mb-4">
                   {tests[0]?.title ?? "Sin sala programada"}
                 </h3>
-                <p className="text-xs text-white/60 mb-1">
-                  Código para unirse
-                </p>
+                <p className="text-xs text-white/60 mb-1">Código para unirse</p>
                 <p className="text-3xl font-bold tracking-[0.25em] mb-4">
                   {roomCode || "— — —"}
                 </p>
@@ -502,12 +457,13 @@ export default function Home() {
                             </p>
                           </div>
                           <span className="text-xs text-default-400 shrink-0">
-                            {new Date(
-                              resume.presentedAt,
-                            ).toLocaleDateString("es", {
-                              day: "numeric",
-                              month: "short",
-                            })}
+                            {new Date(resume.presentedAt).toLocaleDateString(
+                              "es",
+                              {
+                                day: "numeric",
+                                month: "short",
+                              },
+                            )}
                           </span>
                         </li>
                       );

@@ -5,4 +5,9 @@ export interface Question {
   description: string;
   options: Array<Option>;
   createdAt: Date;
+  explanation?: string;
+  timeLimit?: number;
+  points?: number;
+  difficulty?: "easy" | "medium" | "hard";
+  shuffleOptions?: boolean;
 }

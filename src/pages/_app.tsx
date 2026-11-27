@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import { Poppins } from "next/font/google";
@@ -20,7 +21,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
   return (
-    <div className={`${poppins.variable} font-sans`}>
+    <div className={poppins.className}>
       <HeroUIProvider navigate={router.push}>
         <ThemeProvider attribute="data-theme" defaultTheme="light" enableSystem>
           <UserProvider>

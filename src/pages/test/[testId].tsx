@@ -1,61 +1,103 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import Head from "next/head";
 import { useRouter } from "next/router";
+import { Spinner } from "@heroui/react";
 
 import { TestUnpopulated } from "@/types/Test";
-import { getTestById } from "@api/test";
+import { getTestById, getTestDetails } from "@api/test";
 import Quiz from "@components/quiz";
 import QuizDescription from "@components/quizDescription";
-import Layout from "@components/layout";
-import Loader from "@components/loader";
+import { AuthContext } from "@context/AuthContext";
 
-function TestPage(): JSX.Element {
+function TestPage(): JSX.Element | null {
   const [confirmPlay, setConfirmPlay] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [quiz, setQuiz] = useState<TestUnpopulated>();
 
   const router = useRouter();
+  const { refreshAuthContext, isAuthenticated } = useContext(AuthContext);
+
+  useEffect(() => {
+    refreshAuthContext();
+    const hasToken = !!window.localStorage.getItem("token");
+    if (!hasToken) {
+      router.push("/auth/signIn");
+    }
+  }, [router, refreshAuthContext]);
 
   useEffect(() => {
     async function getInitialData() {
-      setIsLoading(true);
       const { testId = "" } = router.query;
+      if (!testId || typeof testId !== "string") return;
 
-      if (!testId) return;
-
-      const testInfo = await getTestById({ testId: testId as string });
-
-      setQuiz(testInfo);
-      setIsLoading(false);
+      setIsLoading(true);
+      try {
+        const testInfo = await getTestDetails({ testId });
+        setQuiz(testInfo);
+      } finally {
+        setIsLoading(false);
+      }
     }
 
-    getInitialData();
-  }, [router]);
+    if (router.isReady && isAuthenticated) {
+      getInitialData();
+    }
+  }, [router.isReady, router.query, isAuthenticated]);
 
-  const component = useMemo(() => {
-    if (!quiz) return;
+  const handleConfirmPlay = async (shouldPlay: boolean) => {
+    if (!shouldPlay || !quiz) {
+      setConfirmPlay(false);
+      return;
+    }
 
-    const { description, questions, title, createdAt, _id } = quiz;
+    if (!quiz.questions || quiz.questions.length === 0) {
+      setIsLoading(true);
+      try {
+        const fullTest = await getTestById({ testId: quiz._id });
+        setQuiz((prev) =>
+          prev
+            ? { ...prev, questions: fullTest.questions ?? [] }
+            : fullTest,
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    }
 
-    if (confirmPlay) return <Quiz testId={_id} items={questions} />;
+    setConfirmPlay(true);
+  };
 
+  if (!isAuthenticated) return null;
+
+  if (isLoading || !quiz) {
     return (
-      <Loader
-        isLoading={isLoading}
-        component={
-          <QuizDescription
-            _id={_id}
-            createdAt={createdAt}
-            description={description}
-            questions={questions}
-            title={title}
-            onConfirm={setConfirmPlay}
-          />
-        }
-      />
+      <div className="min-h-screen flex flex-col items-center justify-center gap-3 bg-background text-foreground">
+        <Spinner color="primary" size="lg" />
+        <p className="text-sm text-default-500">Cargando cuestionario...</p>
+      </div>
     );
-  }, [confirmPlay, quiz, isLoading]);
+  }
 
-  return <Layout>{component}</Layout>;
+  return (
+    <>
+      <Head>
+        <title>{quiz.title} | Quizzify</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/lightBrain.svg" sizes="any" />
+      </Head>
+
+      {confirmPlay ? (
+        <Quiz
+          testId={quiz._id}
+          items={quiz.questions}
+          quizTitle={quiz.title}
+          onExit={() => setConfirmPlay(false)}
+        />
+      ) : (
+        <QuizDescription {...quiz} onConfirm={handleConfirmPlay} />
+      )}
+    </>
+  );
 }
 
 export default TestPage;

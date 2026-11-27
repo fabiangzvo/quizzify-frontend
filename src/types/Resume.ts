@@ -2,7 +2,7 @@ import { Test } from "./Test";
 
 export interface Answer {
   questionId: string;
-  optionId: string;
+  optionId: string | null;
   isCorrect: boolean;
   _id?: string;
 }
